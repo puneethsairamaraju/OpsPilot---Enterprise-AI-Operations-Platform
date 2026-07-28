@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OpsPilot — Enterprise AI Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div id="login" class="login-shell">
+    <section class="login-story">
+      <div class="brand"><span class="brand-mark">O</span> OpsPilot</div>
+      <div>
+        <p class="eyebrow">Enterprise AI, under control</p>
+        <h1>Turn scattered knowledge into decisive action.</h1>
+        <p class="lede">Ground every answer, orchestrate approvals, and observe quality, cost, and risk from one operational cockpit.</p>
+      </div>
+      <div class="trust-row"><span>Hybrid retrieval</span><span>Human approval</span><span>Full audit trail</span></div>
+    </section>
+    <section class="login-panel">
+      <form id="login-form" class="login-card">
+        <div class="mini-mark">O</div>
+        <h2>Welcome back</h2>
+        <p>Sign in to your AI operations workspace.</p>
+        <label>Work email<input id="email" type="email" value="admin@opspilot.dev" required></label>
+        <label>Password<input id="password" type="password" value="admin123!" required></label>
+        <button class="primary" type="submit">Enter workspace <span>→</span></button>
+        <div id="login-error" class="error"></div>
+        <small>Demo: admin@opspilot.dev / admin123!</small>
+      </form>
+    </section>
+  </div>
+
+  <div id="app" class="app-shell hidden">
+    <aside>
+      <div class="brand"><span class="brand-mark">O</span> OpsPilot</div>
+      <nav>
+        <button class="nav-item active" data-view="overview"><span>⌁</span> Overview</button>
+        <button class="nav-item" data-view="ask"><span>✦</span> Knowledge Agent</button>
+        <button class="nav-item" data-view="documents"><span>▱</span> Knowledge Base</button>
+        <button class="nav-item" data-view="connectors"><span>⇄</span> Sources</button>
+        <button class="nav-item" data-view="approvals"><span>✓</span> Approvals <b id="approval-badge">0</b></button>
+      </nav>
+      <div class="system-card"><i></i><div><strong>All systems operational</strong><small>Local inference active</small></div></div>
+      <button id="logout" class="profile"><span id="avatar">MC</span><div><strong id="user-name">Maya Chen</strong><small id="user-role">Administrator</small></div><em>↗</em></button>
+    </aside>
+
+    <main>
+      <header><div><p class="eyebrow">AI Operations Workspace</p><h2 id="page-title">Good morning, Maya</h2></div><div class="header-actions"><span class="env">● Development</span><button id="refresh">↻</button></div></header>
+
+      <section id="overview-view" class="view">
+        <div id="stats" class="stats-grid"></div>
+        <div class="content-grid">
+          <article class="panel wide">
+            <div class="panel-head"><div><p class="eyebrow">Live activity</p><h3>Recent agent runs</h3></div><button class="text-btn" data-go="ask">New query →</button></div>
+            <div id="recent-runs" class="run-list empty">No queries yet. Ask the knowledge agent to begin.</div>
+          </article>
+          <article class="panel quality-panel">
+            <p class="eyebrow">Quality pulse</p><h3>Grounding health</h3>
+            <div class="gauge"><div id="gauge-value">0%</div></div>
+            <div class="legend"><span><i class="green"></i>Grounded</span><span><i class="amber"></i>Needs review</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="ask-view" class="view hidden">
+        <div class="ask-layout">
+          <article class="agent-panel">
+            <div class="agent-hero"><span class="spark">✦</span><div><p class="eyebrow">Grounded enterprise agent</p><h3>What do you need to know?</h3><p>Answers include source evidence, confidence scoring, and automatic approval routing.</p></div></div>
+            <form id="query-form" class="query-box"><textarea id="question" placeholder="Ask about policies, incidents, procedures, or customer operations…" required></textarea><div><span>Searches authorized sources only</span><button class="primary" type="submit">Run agent <b>⌘↵</b></button></div></form>
+            <div class="suggestions"><button>What is the Severity 1 response process?</button><button>Who can approve a refund above $250?</button><button>How is privileged access granted?</button></div>
+          </article>
+          <article id="answer-panel" class="answer-panel hidden">
+            <div class="answer-meta"><span id="answer-status"></span><span id="answer-latency"></span></div>
+            <h3>Grounded response</h3><p id="answer-text"></p>
+            <div class="confidence"><label>Confidence <b id="confidence-value"></b></label><div><i id="confidence-bar"></i></div></div>
+            <div><p class="eyebrow">Evidence</p><div id="citations"></div></div>
+            <div class="feedback-row"><span>Was this useful?</span><button data-rating="5">Yes</button><button data-rating="2">Not quite</button></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="documents-view" class="view hidden">
+        <div class="split-head"><div><p class="eyebrow">Authorized corpus</p><h3>Knowledge Base</h3></div><div class="head-buttons"><button id="load-samples">Load sample database</button><button id="show-upload">Upload files</button><button id="show-ingest" class="primary">+ Paste document</button></div></div>
+        <form id="upload-form" class="panel upload-panel hidden">
+          <div><p class="eyebrow">File ingestion</p><h3>Upload company documents</h3><p>PDF, Word, text, Markdown, CSV, or JSON · maximum 10 MB each</p></div>
+          <label class="file-drop"><input id="document-files" name="files" type="file" multiple accept=".pdf,.docx,.txt,.md,.csv,.json" required><span>Select or drop files here</span></label>
+          <label>Classification<select id="upload-classification"><option value="internal">Internal</option><option value="public">Public</option><option value="confidential">Confidential</option></select></label>
+          <div class="form-actions"><button type="button" id="cancel-upload">Cancel</button><button class="primary" type="submit">Upload and index</button></div>
+        </form>
+        <form id="ingest-form" class="panel ingest hidden">
+          <label>Document title<input id="doc-title" required placeholder="e.g. Vendor Security Policy"></label>
+          <label>Source<select id="doc-source"><option>manual</option><option>slack</option><option>sharepoint</option><option>confluence</option></select></label>
+          <label class="full">Content<textarea id="doc-content" required minlength="20" placeholder="Paste policy or procedure text…"></textarea></label>
+          <div class="full form-actions"><button type="button" id="cancel-ingest">Cancel</button><button class="primary" type="submit">Ingest and index</button></div>
+        </form>
+        <div id="document-list" class="document-grid"></div>
+      </section>
+
+      <section id="approvals-view" class="view hidden">
+        <div class="split-head"><div><p class="eyebrow">Human in the loop</p><h3>Approval Queue</h3></div></div>
+        <div id="approval-list" class="approval-list"></div>
+      </section>
+
+      <section id="connectors-view" class="view hidden">
+        <div class="split-head"><div><p class="eyebrow">Continuous ingestion</p><h3>Connected Sources</h3></div><button id="show-connector" class="primary">+ Connect source</button></div>
+        <div class="connector-note">Connectors accept signed real-time events and preserve source IDs, permissions, updates, and deletions. OAuth credentials stay outside the application database.</div>
+        <form id="connector-form" class="panel ingest hidden">
+          <label>Provider<select id="connector-provider"><option value="slack">Slack</option><option value="google_drive">Google Drive</option><option value="sharepoint">SharePoint</option><option value="notion">Notion</option><option value="jira">Jira</option><option value="zendesk">Zendesk</option><option value="confluence">Confluence</option><option value="email">Email</option></select></label>
+          <label>Connection name<input id="connector-name" required placeholder="e.g. Engineering Slack"></label>
+          <div class="full form-actions"><button type="button" id="cancel-connector">Cancel</button><button class="primary" type="submit">Create connection</button></div>
+        </form>
+        <div id="connector-secret" class="secret-box hidden"></div>
+        <div id="connector-list" class="document-grid"></div>
+      </section>
+    </main>
+  </div>
+  <div id="toast"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

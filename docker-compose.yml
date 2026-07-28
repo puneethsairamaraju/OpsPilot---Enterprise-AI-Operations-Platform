@@ -1,0 +1,40 @@
+services:
+  api:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://opspilot:opspilot@postgres:5432/opspilot
+      JWT_SECRET: ${JWT_SECRET:-local-compose-secret}
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: opspilot
+      POSTGRES_PASSWORD: opspilot
+      POSTGRES_DB: opspilot
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U opspilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    ports: ["9090:9090"]
+    volumes: ["./infra/prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
+  grafana:
+    image: grafana/grafana:11.2.0
+    ports: ["3000:3000"]
+    depends_on: [prometheus]
+volumes:
+  postgres_data:
+
